@@ -7,50 +7,62 @@ document.addEventListener("DOMContentLoaded", () => {
         <h1>Playground</h1>
     `;
 
-    const inputSection = document.createElement("section");
+    const mainSection = document.createElement("section");
+    mainSection.classList.add("main-section");
+
+    const inputSection = document.createElement("div");
     inputSection.classList.add("input-section");
-    const actionBox = document.createElement("div");
-    actionBox.classList.add("action-box");
     const selectionBox = document.createElement("select");
+    selectionBox.classList.add("selection-box");
     selectionBox.setAttribute("name","language");
     selectionBox.setAttribute("id","language");
     selectionBox.innerHTML = `
-        <option class="lang-option"> Select language </option>
         <option class="lang-option" value ="7"> C </option>
         <option class="lang-option" value ="77" selected> C++ </option>
         <option class="lang-option" value ="8"> Java </option>
         <option class="lang-option" value ="0"> Python </option>
         <option class="lang-option" value ="4"> Javascript </option>
     `;
-    const compileBtn = document.createElement("button");
-    compileBtn.innerHTML = `<i class="fa-solid fa-play"></i>&nbsp;Execute`;
     const codeEditor = document.createElement("div");
     codeEditor.classList.add("code-editor");
     const lineNumbers = document.createElement("div");
     lineNumbers.classList.add("line-numbers");  
     const textarea = document.createElement("textarea");
     textarea.classList.add("editor");
+    textarea.placeholder = "Write your code here.."
+    
 
-    const outputSection = document.createElement('section');
+    const outputSection = document.createElement('div');
     outputSection.classList.add("output-section");
+    const outputActions = document.createElement("div");
+    outputActions.classList.add("output-actions");
+    const compileBtn = document.createElement("button");
+    compileBtn.id = "compileBtn";
+    compileBtn.innerHTML = `<i class="fa-solid fa-play"></i>&nbsp;&nbsp;Execute`;
+    const outputContainer = document.createElement("div");
+    outputContainer.classList.add("output-box");
     const output = document.createElement("textarea");
     output.classList.add("output");
     output.readOnly = true;
-
-    actionBox.appendChild(selectionBox);
-    actionBox.appendChild(compileBtn);
+    
+    outputActions.appendChild(compileBtn);
+    outputContainer.appendChild(output);
 
     codeEditor.appendChild(lineNumbers);
     codeEditor.appendChild(textarea);
 
-    inputSection.appendChild(actionBox);
+    inputSection.appendChild(selectionBox);
     inputSection.appendChild(codeEditor);
 
-    outputSection.appendChild(output);
+    outputSection.appendChild(outputActions);
+    outputSection.appendChild(outputContainer);
+
+    mainSection.appendChild(inputSection);
+    mainSection.appendChild(outputSection);
 
     rootContainer.appendChild(nav);
-    rootContainer.appendChild(inputSection);
-    rootContainer.appendChild(outputSection);
+    rootContainer.appendChild(mainSection);
+    
 
     function updateLineNumbers() {
         const lines = textarea.value.split('\n');
@@ -96,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if(textarea.value.trim() === "")
             alert("Please enter valid code");
         else {
+            output.style.color = "yellow";
             output.value = "Compiling...";
 
             let xhttp = new XMLHttpRequest();
@@ -116,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             xhttp.onerror = () => {
                 console.error("Network error while executing the code");
+                output.style.color = "red";
                 output.value = "Error Executing Code";
             }
             xhttp.send(JSON.stringify(data));
@@ -129,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let interval = setInterval(() => {
             if (tries >= MAXTry) {
                 clearInterval(interval);
+                output.style.color = "orange";
                 output.value = "TimeOut!! Try Again.."
                 return;
             }
@@ -146,12 +161,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         const res = JSON.parse(obj.data);
                         if (res.hasOwnProperty("output")) {
                             clearInterval(interval);
+                            output.style.color = "#03ff35";
                             output.value = res.output.substring(9);
                         }
                     }
                 } else {
                     console.error("Error fetching code result:", xhr.status);
                     clearInterval(interval);
+                    output.style.color = "red";
                     output.value = "Error fetching code result.";
                 }
             };
@@ -159,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
             xhr.onerror = function() {
                 console.error("Network error while fetching code result.");
                 clearInterval(interval);
+                output.style.color = "red";
                 output.value = "Error fetching code result.";
             };
 
