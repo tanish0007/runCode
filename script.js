@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     lineNumbers.classList.add("line-numbers");  
     const textarea = document.createElement("textarea");
     textarea.classList.add("editor");
-    textarea.placeholder = "Write your code here.."
+    textarea.placeholder = "Write your code here..";
+    textarea.spellcheck = false;
     
 
     const outputSection = document.createElement('div');
@@ -119,8 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener('keydown', (evt) => {
         if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-            evt.preventDefault(); // Prevent default behavior (like inserting a newline)
-            compileAndRunCode(); // Trigger compilation
+            evt.preventDefault();
+            compileAndRunCode();
         }
     })
 
@@ -218,39 +219,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000);
     }
 })
-
-
-// let data = {
-//             code : textarea.value,
-//             langId : langId
-//         }
-//         console.log(data);
-
-//         if(textarea.value.trim() === "")
-//             alert("Please enter valid code");
-//         else {
-//             output.style.color = "yellow";
-//             output.value = "Compiling...";
-
-//             let xhttp = new XMLHttpRequest();
-//             xhttp.open("POST", "https://course.codequotient.com/api/executeCode", true);
-//             xhttp.setRequestHeader("Content-Type", "application/json");
-
-//             xhttp.onload = () => {
-//                  if (xhttp.status === 200) {
-//                     let obj = JSON.parse(xhttp.responseText);
-//                     console.log(obj);
-//                     let codeId = obj.codeId;
-//                     fetchResponse(codeId);
-//                 } else {
-//                     console.error("Error executing code:", xhttp.status);
-//                     output.textContent = "Error executing code.";
-//                 }
-//             }
-
-//             xhttp.onerror = () => {
-//                 console.error("Network error while executing the code");
-//                 output.style.color = "red";
-//                 output.value = "Error Executing Code";
-//             }
-//             xhttp.send(JSON.stringify(data));
