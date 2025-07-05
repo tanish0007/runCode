@@ -51,12 +51,38 @@ body{
     row-gap: 20px;
 }
 .output-section{
-    background-color: rgb(127, 127, 127);
+    background-color: rgb(55, 55, 55);
     width: 100%;
     padding: 20px;
     display: flex;
     row-gap: 20px;
     flex-direction: column;
+}
+.input-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.in-evt-box{
+    display: flex;
+    column-gap: 10px;
+}
+.in-evt-box button {
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    /* background-color: #c48df73d;
+    color: #8a2be2;
+    box-shadow: 0 2px 6px #8a2be2; */
+    color: #dc143c;
+    background-color: #ffaebe5c;
+    transition: all .3s;
+    cursor: pointer;
+}
+.in-evt-box button:hover{
+    background-color: #fc9aaea7;
+    /* color: rgb(176, 176, 176); */
 }
 .selection-box{
     width: fit-content;
@@ -66,6 +92,7 @@ body{
     border-radius: 5px;
     background-color: black;
     color: white;
+    box-shadow: 0 0 10px black;
 }
 .selection-box option {
   background-color: black;
@@ -104,6 +131,7 @@ body{
     padding: 20px;
     font-family: "Cascadia Mono";
     font-size: 17px;
+    color: blue;
 }
 .output-actions{
     display: flex;
@@ -116,6 +144,18 @@ body{
 }
 .out-evt-box button {
     font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: black;
+    border: none;
+    color: gray;
+    box-shadow: 0 2px 6px black;
+    transition: all .3s;
+    cursor: pointer;
+}
+.out-evt-box button:hover{
+    background-color: rgb(14, 14, 14);
+    color: rgb(176, 176, 176);
 }
 #compileBtn{
     width: fit-content;
@@ -126,12 +166,12 @@ body{
     background-color: #dc143c;
     color: white;
     cursor: pointer;
-    box-shadow: 0 0 10px white;
     transition: all .3s;
-    font-weight: 500;
+    font-weight: 700;
 }
 #compileBtn:hover{
     background-color: #8a2be2;
+    box-shadow: 0 0 10px white;
 }
 .output-box {
     width: 100%;

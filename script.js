@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const inputSection = document.createElement("div");
     inputSection.classList.add("input-section");
+
+    const inputActions = document.createElement("div");
+    inputActions.classList.add("input-actions");
     const selectionBox = document.createElement("select");
     selectionBox.classList.add("selection-box");
     selectionBox.setAttribute("name","language");
@@ -23,6 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
         <option class="lang-option" value ="0"> Python </option>
         <option class="lang-option" value ="4"> Javascript </option>
     `;
+    const inCpClEvents = document.createElement("div");
+    inCpClEvents.classList.add("in-evt-box");
+    const clearCode = document.createElement("button");
+    clearCode.id = "clearCode";
+    clearCode.innerHTML = `<i class="fa-solid fa-rotate-left"></i> Clear`;
+    const copyCode = document.createElement("button");
+    copyCode.id = "copyCode";
+    copyCode.innerHTML = `<i class="fa-solid fa-copy"></i> Copy Code`;
+    inCpClEvents.appendChild(clearCode);
+    inCpClEvents.appendChild(copyCode);
+
+
     const codeEditor = document.createElement("div");
     codeEditor.classList.add("code-editor");
     const lineNumbers = document.createElement("div");
@@ -49,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearConsole.innerHTML = `<i class="fa-solid fa-rotate-left"></i> Clear`;
     const copyConsole = document.createElement("button");
     copyConsole.id = "copyConsole";
-    copyConsole.innerHTML = `<i class="fa-solid fa-copy"></i> Copy`;
+    copyConsole.innerHTML = `<i class="fa-solid fa-copy"></i> Copy Console`;
 
     const outputContainer = document.createElement("div");
     outputContainer.classList.add("output-box");
@@ -66,10 +81,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     outputContainer.appendChild(output);
 
+    inputActions.appendChild(selectionBox);
+    inputActions.appendChild(inCpClEvents);
+
     codeEditor.appendChild(lineNumbers);
     codeEditor.appendChild(textarea);
 
-    inputSection.appendChild(selectionBox);
+    inputSection.appendChild(inputActions);
     inputSection.appendChild(codeEditor);
 
     outputSection.appendChild(outputActions);
@@ -133,6 +151,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     compileBtn.addEventListener("click", compileAndRunCode);
 
+    clearConsole.addEventListener("click", () => {
+        output.value = "";
+    });
+
+    copyConsole.addEventListener("click", async () => {
+        if (output.value.trim() === "") {
+            alert("No output to copy!");
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(output.value);
+            const originalText = copyConsole.innerHTML;
+            copyConsole.style.color = "#03ff35";
+            copyConsole.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+
+            setTimeout(() => {
+                copyConsole.style.color = "rgb(176, 176, 176)";
+                copyConsole.innerHTML = originalText;
+            }, 2000);
+        } catch (err) {
+            alert("Failed to copy: " + err);
+        }
+    });
+
+    clearCode.addEventListener("click", () => {
+        textarea.value = "";
+    });
+
+    copyCode.addEventListener("click", async () => {
+        if (textarea.value.trim() === "") {
+            alert("No output to copy!");
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(textarea.value);
+            const originalText = copyCode.innerHTML;
+            copyCode.style.color = "black";
+            copyCode.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
+
+            setTimeout(() => {
+                copyCode.style.color = "#dc143c";
+                copyCode.innerHTML = originalText;
+            }, 2000);
+        } catch (err) {
+            alert("Failed to copy: " + err);
+        }
+    });
+
     function compileAndRunCode() {
         let data = {
             code: textarea.value,
@@ -158,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     fetchResponse(codeId);
                 } else {
                     console.error("Error executing code:", xhttp.status);
+                    output.style.color = "red";
                     output.textContent = "Error executing code.";
                 }
             };
@@ -191,13 +260,25 @@ document.addEventListener("DOMContentLoaded", () => {
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     let obj = JSON.parse(xhr.responseText);
+                    console.log(obj);
 
                     if (obj.data) {
                         const res = JSON.parse(obj.data);
-                        if (res.hasOwnProperty("output")) {
+
+                        if (res.errors) {
+                            clearInterval(interval);
+                            output.style.color = "red";
+                            output.value = res.errors;
+                        } 
+                        else if (res.output) {
                             clearInterval(interval);
                             output.style.color = "#03ff35";
-                            output.value = res.output.substring(9);
+                            output.value = res.output.substring(9); 
+                        }
+                        else {
+                            clearInterval(interval);
+                            output.style.color = "orange";
+                            output.value = `No output recieved!!\n Please try again`;
                         }
                     }
                 } else {
