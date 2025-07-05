@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const nav = document.createElement("nav");
     nav.classList.add("nav");
     nav.innerHTML = `
-        <h1>Playground</h1>
+        <h2>Code&nbsp;&nbsp;Playground</h2>
+        <p>{&nbsp;Made with <i class="fa-solid fa-heart" style="color:#dc143c"></i> by <span>Tanish Jangra</span>&nbsp;}</p>
+        <span><a href="github.com/tanish0007/runCode"><i class="fa-brands fa-github"></i>&nbsp;Github</a></span>
     `;
 
     const mainSection = document.createElement("section");
@@ -40,8 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const codeEditor = document.createElement("div");
     codeEditor.classList.add("code-editor");
-    const lineNumbers = document.createElement("div");
-    lineNumbers.classList.add("line-numbers");  
+    const lineNumbers = document.createElement("textarea");
+    lineNumbers.classList.add("line-numbers");
+    lineNumbers.readOnly = true;
+    lineNumbers.setAttribute("aria-label", "Line numbers");
     const textarea = document.createElement("textarea");
     textarea.classList.add("editor");
     textarea.placeholder = "Write your code here..";
@@ -110,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalLines = shouldShowExtraLine ? lineCount + 1 : lineCount;
 
         for (let i = 1; i <= totalLines; i++) {
-          numbersHTML += i + '<br>';
+          numbersHTML += i + '\n';
         }
 
         lineNumbers.innerHTML = numbersHTML;
@@ -144,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else if ((evt.ctrlKey || evt.metaKey) && evt.altKey && evt.key === 'x') {
             evt.preventDefault();
-            console.log("yes");
             textarea.value = "";
             updateLineNumbers(); 
             showToast('Editor Cleared!', 'red', 'white');
@@ -180,11 +183,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clearConsole.addEventListener("click", () => {
         output.value = "";
+        showToast('Console Cleared!', 'red', 'white');
     });
 
     copyConsole.addEventListener("click", async () => {
         if (output.value.trim() === "") {
-            alert("No output to copy!");
+            showToast('No Output to copy', 'red', 'white');
             return;
         }
 
@@ -201,15 +205,18 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             alert("Failed to copy: " + err);
         }
+        showToast('Console Copied!', 'green', 'white');
     });
 
     clearCode.addEventListener("click", () => {
         textarea.value = "";
+        updateLineNumbers();
+        showToast('Editor Cleared!', 'red', 'white');
     });
 
     copyCode.addEventListener("click", async () => {
         if (textarea.value.trim() === "") {
-            alert("No output to copy!");
+            showToast('No Code to copy', 'red', 'white');
             return;
         }
 
@@ -226,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
             alert("Failed to copy: " + err);
         }
+        showToast('Code Copied!!', 'green', 'white');
     });
 
     function compileAndRunCode() {
@@ -239,6 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Please enter valid code");
         } else {
             output.style.color = "yellow";
+            showToast('Compiling...','Yellow','black');
             output.value = "Compiling...";
 
             let xhttp = new XMLHttpRequest();
@@ -331,31 +340,42 @@ document.addEventListener("DOMContentLoaded", () => {
         "7" : `#include <stdio.h>
 
 int main() {
-    printf("Hello World!\\n");
+    printf("Hello from Tanish!!\\n");
     return 0;
 }`,
         "77" : `#include <iostream>
 using namespace std;
 
 int main() {
-    cout << "Hello World!!" << endl;
+    cout << "Hello from Tanish!!" << endl;
     return 0;
 }`,
         "8": `public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Hello from Tanish!!");
     }
 }`,
-        "0": `print("Hello World!")`,
-        "4": `console.log("Hello World!");`
+        "0": `print("Hello from Tanish!!")`,
+        "4": `console.log("Hello from Tanish!!");`
     };
 
     function updateEditorLanguage() {
         langId = selectionBox.value;
         textarea.id = `editor-${langId}`;
-        textarea.value = `${languageTemplates[langId]}\n\n/*\n you can run the program by pressing [Ctrl+Enter]\n Or clicking Execute Button \n Clear the editor by [Ctrl+Alt+x] \n*/`;
+        const helpMessage = 
+            "You can run the program by pressing [Ctrl+Enter]\n" +
+            "Or clicking the Execute Button\n" +
+            "Clear the editor by [Ctrl+Alt+x]";
+
+
+        if (langId !== "0") {
+            textarea.value = `/*\n${helpMessage}\n*/\n\n${languageTemplates[langId]}`;
+        } else {
+            textarea.value = `\"\"\"\n${helpMessage}\n\"\"\"\n\n${languageTemplates[langId]}`;
+        }
         updateLineNumbers();
     }
+
     selectionBox.addEventListener("change", updateEditorLanguage);
     updateEditorLanguage();
 })
