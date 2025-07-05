@@ -38,14 +38,31 @@ document.addEventListener("DOMContentLoaded", () => {
     outputActions.classList.add("output-actions");
     const compileBtn = document.createElement("button");
     compileBtn.id = "compileBtn";
+    compileBtn.title = "[Ctrl+Enter]"
     compileBtn.innerHTML = `<i class="fa-solid fa-play"></i>&nbsp;&nbsp;Execute`;
+
+    const outCpClEvents = document.createElement("div");
+    outCpClEvents.classList.add("out-evt-box")
+    const clearConsole = document.createElement("button");
+    clearConsole.id = "clearConsole";
+    clearConsole.innerHTML = `<i class="fa-solid fa-rotate-left"></i> Clear`;
+    const copyConsole = document.createElement("button");
+    copyConsole.id = "copyConsole";
+    copyConsole.innerHTML = `<i class="fa-solid fa-copy"></i> Copy`;
+
     const outputContainer = document.createElement("div");
     outputContainer.classList.add("output-box");
     const output = document.createElement("textarea");
     output.classList.add("output");
+    output.placeholder = "Press [Ctrl+Enter] to execute.."
     output.readOnly = true;
-    
+
+    outCpClEvents.appendChild(clearConsole);
+    outCpClEvents.appendChild(copyConsole);
+
     outputActions.appendChild(compileBtn);
+    outputActions.appendChild(outCpClEvents);
+
     outputContainer.appendChild(output);
 
     codeEditor.appendChild(lineNumbers);
@@ -87,27 +104,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     textarea.addEventListener('input', updateLineNumbers);
     textarea.addEventListener('scroll', syncScroll);
-    
     updateLineNumbers();
 
+    textarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+            updateLineNumbers();
+        } 
+    });
 
-    let langId = selectionBox.value;
+    document.addEventListener('keydown', (evt) => {
+        if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
+            evt.preventDefault(); // Prevent default behavior (like inserting a newline)
+            compileAndRunCode(); // Trigger compilation
+        }
+    })
+
     
-
+    let langId = selectionBox.value;
     selectionBox.addEventListener("change", () => {
         langId = selectionBox.value;
     });
 
-    compileBtn.addEventListener("click", ()=> {
+    compileBtn.addEventListener("click", compileAndRunCode);
+
+    function compileAndRunCode() {
         let data = {
-            code : textarea.value,
-            langId : langId
-        }
+            code: textarea.value,
+            langId: langId
+        };
         console.log(data);
 
-        if(textarea.value.trim() === "")
+        if (textarea.value.trim() === "") {
             alert("Please enter valid code");
-        else {
+        } else {
             output.style.color = "yellow";
             output.value = "Compiling...";
 
@@ -116,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             xhttp.setRequestHeader("Content-Type", "application/json");
 
             xhttp.onload = () => {
-                 if (xhttp.status === 200) {
+                if (xhttp.status === 200) {
                     let obj = JSON.parse(xhttp.responseText);
                     console.log(obj);
                     let codeId = obj.codeId;
@@ -125,16 +159,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error("Error executing code:", xhttp.status);
                     output.textContent = "Error executing code.";
                 }
-            }
+            };
 
             xhttp.onerror = () => {
                 console.error("Network error while executing the code");
                 output.style.color = "red";
                 output.value = "Error Executing Code";
-            }
+            };
             xhttp.send(JSON.stringify(data));
         }
-    })
+    }
 
     function fetchResponse(codeId){
         let tries = 0;
@@ -185,3 +219,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 })
 
+
+// let data = {
+//             code : textarea.value,
+//             langId : langId
+//         }
+//         console.log(data);
+
+//         if(textarea.value.trim() === "")
+//             alert("Please enter valid code");
+//         else {
+//             output.style.color = "yellow";
+//             output.value = "Compiling...";
+
+//             let xhttp = new XMLHttpRequest();
+//             xhttp.open("POST", "https://course.codequotient.com/api/executeCode", true);
+//             xhttp.setRequestHeader("Content-Type", "application/json");
+
+//             xhttp.onload = () => {
+//                  if (xhttp.status === 200) {
+//                     let obj = JSON.parse(xhttp.responseText);
+//                     console.log(obj);
+//                     let codeId = obj.codeId;
+//                     fetchResponse(codeId);
+//                 } else {
+//                     console.error("Error executing code:", xhttp.status);
+//                     output.textContent = "Error executing code.";
+//                 }
+//             }
+
+//             xhttp.onerror = () => {
+//                 console.error("Network error while executing the code");
+//                 output.style.color = "red";
+//                 output.value = "Error Executing Code";
+//             }
+//             xhttp.send(JSON.stringify(data));
