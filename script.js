@@ -140,8 +140,35 @@ document.addEventListener("DOMContentLoaded", () => {
         if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
             evt.preventDefault();
             compileAndRunCode();
+            showToast('Compiling...','Yellow','black');
+        }
+        else if ((evt.ctrlKey || evt.metaKey) && evt.altKey && evt.key === 'x') {
+            evt.preventDefault();
+            console.log("yes");
+            textarea.value = "";
+            updateLineNumbers(); 
+            showToast('Editor Cleared!', 'red', 'white');
         }
     })
+
+    function showToast(message, bgColor, color) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.position = 'fixed';
+        toast.style.top = '20px';
+        toast.style.right = '20px';
+        toast.style.backgroundColor = bgColor;
+        toast.style.color = color;
+        toast.style.fontWeight = 700;
+        toast.style.padding = '10px 20px';
+        toast.style.borderRadius = '4px';
+        toast.style.zIndex = '1000';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 1500);
+    }
 
     
     let langId = selectionBox.value;
@@ -299,4 +326,36 @@ document.addEventListener("DOMContentLoaded", () => {
             xhr.send();
         }, 1000);
     }
+
+    const languageTemplates = {
+        "7" : `#include <stdio.h>
+
+int main() {
+    printf("Hello World!\\n");
+    return 0;
+}`,
+        "77" : `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello World!!" << endl;
+    return 0;
+}`,
+        "8": `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}`,
+        "0": `print("Hello World!")`,
+        "4": `console.log("Hello World!");`
+    };
+
+    function updateEditorLanguage() {
+        langId = selectionBox.value;
+        textarea.id = `editor-${langId}`;
+        textarea.value = `${languageTemplates[langId]}\n\n/*\n you can run the program by pressing [Ctrl+Enter]\n Or clicking Execute Button \n Clear the editor by [Ctrl+Alt+x] \n*/`;
+        updateLineNumbers();
+    }
+    selectionBox.addEventListener("change", updateEditorLanguage);
+    updateEditorLanguage();
 })

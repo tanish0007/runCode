@@ -113,6 +113,7 @@ body{
     height: 100%;
     background-color: black;
     display: flex;
+    /* overflow-y: scroll; */
 }
 
 .line-numbers{
@@ -121,6 +122,9 @@ body{
     padding: 20px;
     font-family: "Cascadia Mono";
     font-size: 17px;
+    display: block;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 .editor {
     resize: none;
@@ -132,6 +136,7 @@ body{
     font-family: "Cascadia Mono";
     font-size: 17px;
     color: blue;
+    overflow-y: scroll;
 }
 .output-actions{
     display: flex;
