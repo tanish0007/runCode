@@ -292,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     let obj = JSON.parse(xhr.responseText);
-                    // console.log(obj);
 
                     if (obj.data) {
                         const res = JSON.parse(obj.data);
@@ -354,65 +353,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, 1000);
     }
-
-    // function fetchResponse(codeId){
-    //     let tries = 0;
-    //     const MAXTry = 10;
-
-    //     let interval = setInterval(() => {
-    //         if (tries >= MAXTry) {
-    //             clearInterval(interval);
-    //             output.style.color = "orange";
-    //             output.value = "TimeOut!! Try Again.."
-    //             return;
-    //         }
-    //         tries++;
-
-    //         let xhr = new XMLHttpRequest();
-    //         let URL = `https://course.codequotient.com/api/codeResult/${codeId}`
-    //         xhr.open("GET", URL, true);
-
-    //         xhr.onload = function() {
-    //             if (xhr.status === 200) {
-    //                 let obj = JSON.parse(xhr.responseText);
-
-    //                 if (obj.data) {
-    //                     const res = JSON.parse(obj.data);
-    //                     console.log(res);
-    //                     if (res.errors) {
-    //                         clearInterval(interval);
-    //                         output.style.color = "red";
-    //                         output.value = res.errors;
-    //                     } 
-    //                     else if (res.output) {
-    //                         clearInterval(interval);
-    //                         output.style.color = "#03ff35";
-    //                         output.value = res.output.substring(9); 
-    //                     }
-    //                     else {
-    //                         clearInterval(interval);
-    //                         output.style.color = "orange";
-    //                         output.value = `No output recieved!!\n Please try again`;
-    //                     }
-    //                 }
-    //             } else {
-    //                 console.error("Error fetching code result:", xhr.status);
-    //                 clearInterval(interval);
-    //                 output.style.color = "red";
-    //                 output.value = "Error fetching code result.";
-    //             }
-    //         };
-
-    //         xhr.onerror = function() {
-    //             console.error("Network error while fetching code result.");
-    //             clearInterval(interval);
-    //             output.style.color = "red";
-    //             output.value = "Error fetching code result.";
-    //         };
-
-    //         xhr.send();
-    //     }, 1000);
-    // }
 
     const languageTemplates = {
         "7" : `#include <stdio.h>
