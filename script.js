@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nav.innerHTML = `
         <h2>Code&nbsp;&nbsp;Playground</h2>
         <p>{&nbsp;Made with <i class="fa-solid fa-heart" style="color:#dc143c"></i> by <span>Tanish Jangra</span>&nbsp;}</p>
-        <span><a href="github.com/tanish0007/runCode"><i class="fa-brands fa-github"></i>&nbsp;Github</a></span>
+        <span><a href="https://github.com/tanish0007/runCode"><i class="fa-brands fa-github"></i>&nbsp;Github</a></span>
     `;
 
     const mainSection = document.createElement("section");
@@ -223,15 +223,15 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await navigator.clipboard.writeText(textarea.value);
             const originalText = copyCode.innerHTML;
-            copyCode.style.color = "black";
+            copyCode.style.color = "green";
             copyCode.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
 
             setTimeout(() => {
-                copyCode.style.color = "#dc143c";
+                copyCode.style.color = "#8a2be2";
                 copyCode.innerHTML = originalText;
             }, 2000);
         } catch (err) {
-            alert("Failed to copy: " + err);
+            showToast(`Failed to copy: ${err}`, 'red', 'white');
         }
         showToast('Code Copied!!', 'green', 'white');
     });
