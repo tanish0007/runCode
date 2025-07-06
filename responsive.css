@@ -1,0 +1,54 @@
+@media (max-width: 1200px) {
+    .nav{
+        height: 60px;
+    }
+    .nav h2{
+        font-size: 20px;
+    }
+    .nav p{
+        font-size: 20px;
+    }
+    .nav span{
+        a{
+            font-size: 20px;
+        }
+    }
+
+    .main-section{
+        padding: 0px;
+    }
+
+    .input-section{
+        padding: 15px;
+        row-gap: 10px;
+    }
+    .output-section{
+        padding: 15px;
+        row-gap: 10px;
+    }
+    .in-evt-box button{
+        font-size: 10px;
+    }
+    .selection-box{
+        font-size: 12px;
+    }
+    .selection-box option{
+        font-size: 12px;
+    }
+    .line-numbers{
+        font-size: 12px;
+    }
+    .editor{
+        font-size: 12px;
+    }
+
+    .out-evt-box button{
+        font-size: 10px;
+    }
+    #compileBtn{
+        font-size: 12px;
+    }
+    .output{
+        font-size: 12px;
+    }
+}

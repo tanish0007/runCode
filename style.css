@@ -44,6 +44,7 @@ body{
 
     span{
         font-family: "Great Vibes";
+        color: #dc143c;
     }
 }
 .nav span{
@@ -54,6 +55,9 @@ body{
         text-decoration: none;
         color: white;
         font-size: 30px;
+    }
+    a:hover{
+        color: #8a2be2;
     }
 }
 
@@ -110,17 +114,10 @@ body{
     color: white;
 }
 .selection-box option {
-  background-color: black;
+  background-color: #dc143c;
   color: white;
   font-size: 20px;
-}
-.selection-box option:hover {
-  background-color: #e0e0e0;
   cursor: pointer;
-}
-
-.selection-box option:checked {
-  background-color: #8a2be2;
 }
 
 .code-editor{
