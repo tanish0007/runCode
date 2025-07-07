@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(data);
 
         if (textarea.value.trim() === "") {
-            alert("Please enter valid code");
+            showToast("Please enter valid Code",'red','white');
         } else {
             output.style.color = "yellow";
             showToast('Compiling...','Yellow','black');
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     console.error("Error executing code:", xhttp.status);
                     output.style.color = "red";
-                    output.textContent = "Error executing code.";
+                    output.value = "Error executing code.";
                 }
             };
 
